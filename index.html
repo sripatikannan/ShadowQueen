@@ -118,6 +118,28 @@
             min-width: 200px;
         }
 
+        .center-start-button {
+            margin-top: 15px;
+        }
+
+        .center-start-button button {
+            padding: 12px 24px;
+            background: #d4af37;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .center-start-button button:hover {
+            background: #b8941f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
         .leading-suit {
             margin-top: 10px;
             padding: 8px 12px;
@@ -134,10 +156,50 @@
             font-size: 16px;
         }
 
+        .trump-suit-display {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin-left: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .trump-info {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .trump-suit-display {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin-left: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #000000 !important;
+        }
+
         .partner-info {
             margin-top: 5px;
             font-size: 14px;
-            color: #ffd700;
+            color: white;
+        }
+
+        .partner-card-display {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin-left: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #000000 !important;
         }
 
         .player {
@@ -290,17 +352,30 @@
 
         .trump-selection {
             position: fixed;
-            top: 50%;
+            top: 20%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, 0);
             display: none;
             flex-direction: column;
-            gap: 15px;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 15px;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 20px;
+            border-radius: 12px;
             border: 3px solid #d4af37;
             z-index: 200;
+            max-width: 500px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .trump-selection h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .trump-selection h4 {
+            margin: 10px 0 8px 0;
+            font-size: 14px;
         }
 
         .suit-buttons {
@@ -310,13 +385,13 @@
         }
 
         .suit-button {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 22px;
             cursor: pointer;
             background: white;
             border: 2px solid #333;
@@ -335,15 +410,17 @@
         }
 
         .partner-selection {
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .partner-cards {
             display: flex;
-            gap: 5px;
+            gap: 4px;
             flex-wrap: wrap;
             justify-content: center;
-            max-width: 400px;
+            max-width: 450px;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .phase-indicator {
@@ -513,14 +590,17 @@
         <div class="table" id="table">
             <div class="center-info" id="centerInfo">
                 <div id="gameStatus">Ready to Play</div>
+                <div class="center-start-button">
+                    <button id="startGame">Start Game</button>
+                </div>
                 <div class="leading-suit" id="leadingSuit" style="display: none;">
                     Leading: <span id="leadingSuitSymbol"></span>
                 </div>
                 <div class="trump-info" id="trumpInfo" style="display: none;">
-                    Trump: <span id="trumpSuit"></span>
+                    Trump: <span id="trumpSuit" class="trump-suit-display"></span>
                 </div>
                 <div class="partner-info" id="partnerInfo" style="display: none;">
-                    Partner: <span id="partnerCard"></span>
+                    Partner: <span id="partnerCard" class="partner-card-display"></span>
                 </div>
             </div>
         </div>
@@ -528,9 +608,10 @@
         <div class="cards-container" id="playerCards"></div>
 
         <div class="controls">
-            <button id="startGame">Start Game</button>
+            <button id="restartGame" style="display: none;">Restart Game</button>
             <div>Round: <span id="roundCounter">0</span>/10</div>
-            <div>Score - Main: <span id="mainScore">0</span> Village: <span id="villageScore">0</span></div>
+            <div>Main Team: <span id="mainScore">0</span></div>
+            <div>Village Team: <span id="villageScore">0</span></div>
         </div>
 
         <div class="phase-indicator" id="phaseIndicator">
@@ -550,8 +631,8 @@
             <div class="suit-buttons">
                 <div class="suit-button" data-suit="spades" style="color: black;">♠</div>
                 <div class="suit-button" data-suit="hearts" style="color: red;">♥</div>
-                <div class="suit-button" data-suit="diamonds" style="color: red;">♦</div>
                 <div class="suit-button" data-suit="clubs" style="color: black;">♣</div>
+                <div class="suit-button" data-suit="diamonds" style="color: red;">♦</div>
             </div>
             <div class="partner-selection">
                 <h4>Select Partner Card</h4>
@@ -589,6 +670,7 @@
                 this.round = 0;
                 this.mainTeamScore = 0;
                 this.villageTeamScore = 0;
+                this.playerScores = [0, 0, 0, 0, 0]; // Track individual player scores
                 this.gameStarted = false;
                 this.gameSetup = false;
                 
@@ -604,6 +686,7 @@
                     const singlePlayerBtn = document.getElementById('singlePlayerBtn');
                     const multiPlayerBtn = document.getElementById('multiPlayerBtn');
                     const startGameBtn = document.getElementById('startGame');
+                    const restartGameBtn = document.getElementById('restartGame');
                     
                     if (singlePlayerBtn) {
                         singlePlayerBtn.addEventListener('click', () => {
@@ -624,11 +707,18 @@
                             if (!this.gameStarted && this.gameSetup) {
                                 this.gameStarted = true;
                                 this.phase = 'shuffle';
-                                startGameBtn.textContent = 'Restart Game';
+                                // Hide start button and show restart button
+                                startGameBtn.style.display = 'none';
+                                if (restartGameBtn) restartGameBtn.style.display = 'block';
                                 this.startShuffleAnimation();
-                            } else if (this.gameStarted) {
-                                location.reload();
                             }
+                        });
+                    }
+
+                    if (restartGameBtn) {
+                        restartGameBtn.addEventListener('click', () => {
+                            console.log('Restart game clicked!');
+                            location.reload();
                         });
                     }
                 }, 100);
@@ -1016,7 +1106,7 @@
                 const playerCards = this.playerHands[this.bidWinner];
                 const allPossibleCards = [];
                 const suits = ['spades', 'hearts', 'clubs', 'diamonds'];
-                const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+                const values = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2']; // Highest to lowest
                 
                 suits.forEach(suit => {
                     values.forEach(value => {
@@ -1031,9 +1121,10 @@
                 allPossibleCards.forEach(card => {
                     const cardDiv = document.createElement('div');
                     cardDiv.className = 'card';
-                    cardDiv.style.width = '40px';
-                    cardDiv.style.height = '56px';
-                    cardDiv.style.fontSize = '8px';
+                    cardDiv.style.width = '35px';
+                    cardDiv.style.height = '49px';
+                    cardDiv.style.fontSize = '7px';
+                    cardDiv.style.padding = '2px';
                     
                     const isRed = card.suit === 'hearts' || card.suit === 'diamonds';
                     const suitSymbol = this.getSuitSymbol(card.suit);
@@ -1381,6 +1472,9 @@
                     else if (card.value === 'Q') trickPoints += 10;
                 });
                 
+                // Award points to the trick winner's individual score
+                this.playerScores[this.trickWinner] += trickPoints;
+                
                 if (this.mainTeam.includes(this.trickWinner)) {
                     this.mainTeamScore += trickPoints;
                 } else {
@@ -1427,13 +1521,29 @@
                 const humanInMainTeam = this.mainTeam.includes(0);
                 const humanTeamWins = (humanInMainTeam && !villageWins) || (!humanInMainTeam && villageWins);
                 
+                // Create individual scores display
+                const playerScoresDisplay = this.players.map((player, index) => {
+                    const teamLabel = this.mainTeam.includes(index) ? '(Main)' : '(Village)';
+                    return `${player.name}: ${this.playerScores[index]} pts ${teamLabel}`;
+                }).join('<br>');
+                
+                // Find best player
+                const maxScore = Math.max(...this.playerScores);
+                const bestPlayerIndex = this.playerScores.indexOf(maxScore);
+                const bestPlayer = this.players[bestPlayerIndex];
+                
                 document.getElementById('phaseIndicator').textContent = 'Game Over';
                 document.getElementById('gameStatus').innerHTML = `
-                    <div>Game Over!</div>
-                    <div>Village needed: ${targetScore + 1}+ points</div>
-                    <div>Village got: ${this.villageTeamScore} points</div>
-                    <div><strong>${villageWins ? 'Village Team Wins!' : 'Main Team Wins!'}</strong></div>
-                    ${humanTeamWins ? '<div style="color: #ffd700; margin-top: 10px;">🎉 YOU WON! 🎉</div>' : '<div style="color: #ff4444; margin-top: 10px;">💥 YOU LOST! 💥</div>'}
+                    <div><strong>Game Over!</strong></div>
+                    <div style="margin: 10px 0; font-size: 12px;">Village needed: ${targetScore + 1}+ points</div>
+                    <div style="margin: 5px 0; font-size: 12px;">Village got: ${this.villageTeamScore} points</div>
+                    <div style="margin: 10px 0;"><strong>${villageWins ? 'Village Team Wins!' : 'Main Team Wins!'}</strong></div>
+                    ${humanTeamWins ? '<div style="color: #ffd700; margin: 10px 0;">🎉 YOU WON! 🎉</div>' : '<div style="color: #ff4444; margin: 10px 0;">💥 YOU LOST! 💥</div>'}
+                    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #d4af37; font-size: 11px; line-height: 1.4;">
+                        <div style="margin-bottom: 8px;"><strong>Individual Scores:</strong></div>
+                        ${playerScoresDisplay}
+                        <div style="margin-top: 8px; color: #ffd700;"><strong>⭐ Best Player: ${bestPlayer.name} (${maxScore} pts)</strong></div>
+                    </div>
                 `;
                 
                 if (humanTeamWins) {
